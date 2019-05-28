@@ -13,7 +13,7 @@ class Article:
             punctuation = ".,?!:;(){}[]"
 
             self.abstract_array = nltk.sent_tokenize(self.abstract)
-
+            
             for i, sentence in enumerate(self.abstract_array):
                 for char in punctuation:
                     sentence = sentence.replace(char, ' %s ' % char)

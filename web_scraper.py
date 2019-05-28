@@ -1,3 +1,4 @@
+import os
 from Bio import Entrez
 
 def search(query):
@@ -5,7 +6,7 @@ def search(query):
     try:
         searchHandle = Entrez.esearch(db='pubmed',
                                 sort='relevance',
-                                retmax='20',
+                                retmax='10',
                                 retmode='xml',
                                 term=query)
         searchResults = Entrez.read(searchHandle)
@@ -33,7 +34,9 @@ def write_xml(data):
         print ("This search returned no hits")
 
     else:
-        f=open("web_scrapper_results.txt" ,"w")
+        if not os.path.exists("tmp/"):
+            os.mkdir("tmp/")
+        f=open("tmp/web_scrapper_results.xml" ,"w")
         f.write(data)
         f.close()
 
