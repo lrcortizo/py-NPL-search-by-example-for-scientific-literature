@@ -24,16 +24,21 @@ def parse_xml(xml_path):
     except:
         return None
 
+def preprocessing(article_list):
+        texts = []
+        for article in article_list:
+            texts.append(article.get_abstract_array())
+        #print(texts)
+        return texts
+
+
 if __name__ == '__main__':
     #logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
     xml_path = 'tmp/web_scrapper_results.xml'
     article_list = parse_xml(xml_path)
-    #print(article_list[0].get_abstract_array())
-    texts = []
-    for article in article_list:
-        texts.append(article.get_abstract_array())
-    #print(texts)
+    preprocessing(article_list)
+
 
     dictionary = corpora.Dictionary(texts)
     dictionary.save('tmp/dictionary.dict')
