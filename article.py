@@ -14,6 +14,4 @@ class Article:
             stoplist = set('for a of the and to in'.split())
             self.abstract_array = [word for word in self.abstract.lower().split() if word not in stoplist]
 
-
-
         return self.abstract_array
