@@ -1,21 +1,15 @@
 import sys
-import os
 from Bio import Entrez
+from parameter import Parameter
 
-def check_args(args):
-    if len(sys.argv) < 2:
-        print("You must include the search terms")
-        sys.exit(1)
-
-
-def search(query):
+def search(parameter):
     Entrez.email = 'your.email@example.com'
     try:
         searchHandle = Entrez.esearch(db='pubmed',
                                 sort='relevance',
-                                retmax='10',
+                                retmax=parameter.max_results,
                                 retmode='xml',
-                                term=query)
+                                term=parameter.search_term)
         searchResults = Entrez.read(searchHandle)
         searchHandle.close()
         return searchResults
@@ -35,21 +29,21 @@ def fetch_details(id_list):
     except:
         return None
 
-def write_xml(data):
+def write_xml(data, parameter):
     if data==None:
         print (80*"*"+"\n")
         print ("This search returned no hits")
+        sys.exit(1)
 
     else:
-        if not os.path.exists("tmp/"):
-            os.mkdir("tmp/")
-        f=open("tmp/web_scrapper_results.xml" ,"w")
+        parameter.create_output_directory()
+        f=open(parameter.scrapper_result ,"w")
         f.write(data)
         f.close()
         print ("Search results stored in tmp/web_scrapper_results.xml")
 
-if __name__ == '__main__':
-    check_args(sys.argv)
-    searchResults = search(sys.argv[1:])
+def web_scrapper(parameter):
+    searchResults = search(parameter)
     fetchResults = fetch_details(searchResults['IdList'])
-    write_xml(fetchResults)
+    write_xml(fetchResults, parameter)
+    return fetchResults
