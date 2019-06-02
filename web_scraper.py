@@ -3,6 +3,8 @@ from Bio import Entrez
 from parameter import Parameter
 
 def search(parameter):
+    #query to pubmed
+    #search and retrieve primary IDs and term translations and optionally retains results
     Entrez.email = 'your.email@example.com'
     try:
         searchHandle = Entrez.esearch(db='pubmed',
@@ -17,6 +19,7 @@ def search(parameter):
         return None
 
 def fetch_details(id_list):
+    #retrieve records in the requested format from a list of IDs
     ids = ','.join(id_list)
     Entrez.email = 'your.email@example.com'
     try:
@@ -30,20 +33,24 @@ def fetch_details(id_list):
         return None
 
 def write_xml(data, parameter):
+    #check and write results
     if data==None:
         print (80*"*"+"\n")
         print ("This search returned no hits")
         sys.exit(1)
 
     else:
+        #write result into a xml file
         parameter.create_output_directory()
         f=open(parameter.scrapper_result ,"w")
         f.write(data)
         f.close()
-        print ("Search results stored in tmp/web_scrapper_results.xml")
+        print ("Search results stored in" + parameter.scrapper_result)
 
-def web_scrapper(parameter):
+def scrape(parameter):
+    print("----Step 1: Scraping pubmed database")
     searchResults = search(parameter)
     fetchResults = fetch_details(searchResults['IdList'])
     write_xml(fetchResults, parameter)
+    print("----End step 1\n")
     return fetchResults

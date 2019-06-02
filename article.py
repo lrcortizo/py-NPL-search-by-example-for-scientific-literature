@@ -9,15 +9,11 @@ class Article:
         self.abstract_array = None
 
     def get_abstract_array(self):
+        #tokenize the abstract
         if self.abstract_array is None:
-            punctuation = ".,?!:;(){}[]"
+            stoplist = set('for a of the and to in'.split())
+            self.abstract_array = [word for word in self.abstract.lower().split() if word not in stoplist]
 
-            self.abstract_array = nltk.sent_tokenize(self.abstract)
-            
-            for i, sentence in enumerate(self.abstract_array):
-                for char in punctuation:
-                    sentence = sentence.replace(char, ' %s ' % char)
 
-                self.abstract_array[i] = sentence.split()
 
         return self.abstract_array
