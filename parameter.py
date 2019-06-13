@@ -1,5 +1,8 @@
 import os
 import re
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import string
 
 class Parameter:
     def __init__(self, search_term, file, output_directory, max_results):
@@ -28,7 +31,16 @@ class Parameter:
         if self.input_file_text is None:
             #parse file
             file = open(self.file, mode='r')
-            self.input_file_text = file.read()
+            text = file.read()
             file.close()
+
+            #tokenize, remove stopwords and punctuation
+            tokens = word_tokenize(text)
+            tokens = [w.lower() for w in tokens]
+            table = str.maketrans('', '', string.punctuation)
+            stripped = [w.translate(table) for w in tokens]
+            words = [word for word in stripped if word.isalpha()]
+            stop_words = set(stopwords.words('english'))
+            self.input_file_text = [w for w in words if not w in stop_words]
 
         return self.input_file_text

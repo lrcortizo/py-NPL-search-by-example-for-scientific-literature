@@ -1,4 +1,6 @@
-import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import string
 
 class Article:
 
@@ -11,7 +13,17 @@ class Article:
     def get_abstract_array(self):
         #tokenize the abstract
         if self.abstract_array is None:
-            stoplist = set('for a of the and to in'.split())
-            self.abstract_array = [word for word in self.abstract.lower().split() if word not in stoplist]
+            # split into words
+            tokens = word_tokenize(self.abstract)
+            # convert to lower case
+            tokens = [w.lower() for w in tokens]
+            # remove punctuation from each word
+            table = str.maketrans('', '', string.punctuation)
+            stripped = [w.translate(table) for w in tokens]
+            # remove remaining tokens that are not alphabetic
+            words = [word for word in stripped if word.isalpha()]
+            # filter out stop words
+            stop_words = set(stopwords.words('english'))
+            self.abstract_array = [w for w in words if not w in stop_words]
 
         return self.abstract_array

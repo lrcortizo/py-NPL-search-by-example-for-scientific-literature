@@ -29,8 +29,6 @@ def preprocessing(article_list):
     #print(texts)
     return texts
 
-
-
 def process_text(parameter):
     print("----Step 2: Text processing")
     #logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
@@ -56,7 +54,7 @@ def process_text(parameter):
     #for doc in corpus_lsi:
         #print(doc)
 
-    vec_bow = dictionary.doc2bow(parameter.get_input_file_array().lower().split())
+    vec_bow = dictionary.doc2bow(parameter.get_input_file_array())
     vec_lsi = lsi[vec_bow]
 
     index = similarities.MatrixSimilarity(corpus_lsi)

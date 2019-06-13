@@ -45,7 +45,7 @@ def write_xml(data, parameter):
         f=open(parameter.scrapper_result ,"w")
         f.write(data)
         f.close()
-        print ("Search results stored in" + parameter.scrapper_result)
+        print ("Search results stored in " + parameter.scrapper_result)
 
 def scrape(parameter):
     print("----Step 1: Scraping pubmed database")
