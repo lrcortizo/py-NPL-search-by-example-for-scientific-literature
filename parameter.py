@@ -1,8 +1,8 @@
 import os
 import re
+import string
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-import string
 
 class Parameter:
     def __init__(self, search_term, file, output_directory, max_results):

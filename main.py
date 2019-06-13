@@ -3,6 +3,7 @@ import os
 import getopt
 import web_scraper
 import text_processing
+import text_similarities
 from parameter import Parameter
 
 def check_arguments(argv):
@@ -63,3 +64,5 @@ if __name__ == "__main__":
     web_scraper.scrape(parameter)
     #Step 2: Text processing
     text_processing.process_text(parameter)
+    #Step 3: Text similarities
+    text_similarities.similarity(parameter)
