@@ -56,12 +56,10 @@ def process_text(parameter):
     #for doc in corpus_lsi:
         #print(doc)
 
-    lsi = models.LsiModel(corpus, id2word=dictionary, num_topics=2)
     vec_bow = dictionary.doc2bow(parameter.get_input_file_array().lower().split())
     vec_lsi = lsi[vec_bow]
 
-
-    index = similarities.MatrixSimilarity(lsi[corpus])
+    index = similarities.MatrixSimilarity(corpus_lsi)
     sims = sorted(enumerate(index[vec_lsi]), key=lambda item: -item[1])
     print(sims)
     print("----End step 2\n")
