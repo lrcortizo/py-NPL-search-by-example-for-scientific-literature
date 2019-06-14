@@ -12,6 +12,7 @@ class Parameter:
         self.create_output_directory()
         self.max_results = max_results
         self.scrapper_result = self.output_directory + "web_scraper_results.xml"
+        self.output_result = self.output_directory + "result.txt"
         self.dictionary = self.output_directory + "dictionary.dict"
         self.corpus = self.output_directory + "corpus.mm"
         self.input_file_text = None

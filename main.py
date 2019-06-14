@@ -124,5 +124,5 @@ if __name__ == "__main__":
 
     #Step 3: Text similarities
     print_step("Step 3: Text similarities")
-    text_similarities.similarity(parameter)
+    text_similarities.similarity(parameter, articles)
     print_step("End step 3")
