@@ -5,7 +5,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
 class Parameter:
-    def __init__(self, search_term, file, output_directory, max_results):
+    def __init__(self, search_term, file, output_directory, max_results, verbose):
         self.search_term = search_term
         self.file = file
         self.output_directory = self.check_directory_format(output_directory)
@@ -14,6 +14,7 @@ class Parameter:
         self.dictionary = self.output_directory + "dictionary.dict"
         self.corpus = self.output_directory + "corpus.mm"
         self.input_file_text = None
+        self.verbose = verbose
 
     def check_directory_format(self, dir):
         #Check format of directory path

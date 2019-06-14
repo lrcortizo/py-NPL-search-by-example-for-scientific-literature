@@ -3,7 +3,6 @@ import nltk
 from bs4 import BeautifulSoup
 from article import Article
 from gensim import corpora
-from smart_open import smart_open
 
 def nltk_check():
 	try:
@@ -39,19 +38,18 @@ def preprocessing(article_list):
 def process_text(parameter):
     print("----Step 2: Text processing")
     #logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-	
+
+    #Check if necessary resources are avaliable
     nltk_check()
-	
+
     article_list = parse_xml(parameter.scrapper_result)
     texts = preprocessing(article_list)
-    #print(texts)
 
     dictionary = corpora.Dictionary(texts)
     dictionary.save(parameter.dictionary)
-    #print(dictionary)
 
     corpus = [dictionary.doc2bow(text) for text in texts]
     corpora.MmCorpus.serialize(parameter.corpus, corpus)
-    #print(corpus)
 
     print("----End step 2\n")
+    return article_list
