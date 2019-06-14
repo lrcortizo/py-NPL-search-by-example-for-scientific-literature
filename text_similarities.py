@@ -1,9 +1,14 @@
+import logging
 import gensim.similarities as similarities
 from gensim import corpora
 from gensim import models
 
 def similarity(parameter):
     print("----Step 3: Text similarities")
+    #Verbose mode
+    if parameter.verbose:
+        logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
     #load dictionary and corpus
     dictionary = corpora.Dictionary.load(parameter.dictionary)
     corpus_list = corpora.MmCorpus(parameter.corpus)

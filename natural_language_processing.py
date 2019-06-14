@@ -37,7 +37,9 @@ def preprocessing(article_list):
 
 def process_text(parameter):
     print("----Step 2: Text processing")
-    #logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    #Verbose mode
+    if parameter.verbose:
+        logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
     #Check if necessary resources are avaliable
     nltk_check()
