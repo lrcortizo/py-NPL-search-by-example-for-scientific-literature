@@ -11,13 +11,10 @@ Options and arguments:
 ```
 ###### Requirements:
 - Python >= 3.7.2
-  - biopython
-  - gensim
-  - BeautifulSoup
-  - nltk
-  - os
-  - re
-  - sys
-  - getopt
+  - biopython: ```pip install biopython```
+  - gensim: ```pip install gensim```
+  - BeautifulSoup: ```pip install beautifulsoup4```
+  - lxml: ```pip install lxml```
+  - nltk: ```pip install nltk```
 - C Compiler
 
