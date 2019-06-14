@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     #Step 2: Text processing
     print_step("Step 2: Natural language processing")
-    articles = natural_language_processing.process_text(parameter)
+    articles = natural_language_processing.process_docs(parameter)
     print_step("End step 2")
 
     #Step 3: Text similarities

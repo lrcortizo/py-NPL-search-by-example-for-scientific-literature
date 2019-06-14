@@ -4,6 +4,7 @@ from article import Article
 from gensim import corpora
 
 def nltk_check():
+    #check if punkt and stopwords resources are avaliable
 	try:
 		nltk.data.find('tokenizers/punkt')
 		nltk.data.find('corpora/stopwords')
@@ -28,23 +29,25 @@ def parse_xml(xml_path):
     return article_list
 
 def preprocessing(article_list):
-    texts = []
+    doc_arrays = []
     for article in article_list:
-        texts.append(article.get_abstract_array())
-    #print(texts)
-    return texts
+        doc_arrays.append(article.get_abstract_array())
 
-def process_text(parameter):
+    return doc_arrays
+
+def process_docs(parameter):
     #Check if necessary resources are avaliable
     nltk_check()
 
+    #Parse xml file
     article_list = parse_xml(parameter.scrapper_result)
-    texts = preprocessing(article_list)
+    doc_arrays = preprocessing(article_list)
 
-    dictionary = corpora.Dictionary(texts)
+    #Creating dictionary and corpus
+    dictionary = corpora.Dictionary(doc_arrays)
     dictionary.save(parameter.dictionary)
 
-    corpus = [dictionary.doc2bow(text) for text in texts]
+    corpus = [dictionary.doc2bow(array) for array in doc_arrays]
     corpora.MmCorpus.serialize(parameter.corpus, corpus)
 
     return article_list
