@@ -8,6 +8,7 @@ Options and arguments:
   -f, --input_file: Input file to compare the results of query
   -d, --dir: Output directory to the output and temporary files
   -n, --results_number: Number of results in pubmed search
+  -v, --verbose: Verbose mode
 ```
 ###### Requirements:
 - Python >= 3.7.2
@@ -17,4 +18,3 @@ Options and arguments:
   - lxml: ```pip install lxml```
   - nltk: ```pip install nltk```
 - C Compiler
-
