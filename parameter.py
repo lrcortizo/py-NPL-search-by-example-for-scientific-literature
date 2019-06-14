@@ -9,6 +9,7 @@ class Parameter:
         self.search_term = search_term
         self.file = file
         self.output_directory = self.check_directory_format(output_directory)
+        self.create_output_directory()
         self.max_results = max_results
         self.scrapper_result = self.output_directory + "web_scraper_results.xml"
         self.dictionary = self.output_directory + "dictionary.dict"

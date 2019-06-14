@@ -3,8 +3,6 @@ from gensim import corpora
 from gensim import models
 
 def similarity(parameter):
-    print("----Step 3: Text similarities")
-
     #load dictionary and corpus
     dictionary = corpora.Dictionary.load(parameter.dictionary)
     corpus_list = corpora.MmCorpus(parameter.corpus)
@@ -22,5 +20,3 @@ def similarity(parameter):
     index = similarities.MatrixSimilarity(corpus_lsi)
     sims = sorted(enumerate(index[vec_lsi]), key=lambda item: -item[1])
     print(sims)
-
-    print("----End step 3\n")

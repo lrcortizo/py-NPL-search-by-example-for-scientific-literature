@@ -101,6 +101,11 @@ Options and arguments:\n\
     parameter = Parameter(search_term, file, output_directory, max_results, verbose)
     return parameter
 
+def print_step(msg):
+    num = int((100-(len(msg)+2))/2)
+    print("\n"+100*"*"+"\n"+num*"-"+" "+msg+" "+num*"-"+"\n"+100*"*"+"\n")
+
+
 if __name__ == "__main__":
     parameter = cli_params(sys.argv[1:])
 
@@ -108,8 +113,16 @@ if __name__ == "__main__":
         logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
     #Step 1: Web scraping
+    print_step("Step 1: Scraping pubmed database")
     web_scraper.scrape(parameter)
+    print_step("End step 1")
+
     #Step 2: Text processing
+    print_step("Step 2: Natural language processing")
     articles = natural_language_processing.process_text(parameter)
+    print_step("End step 2")
+
     #Step 3: Text similarities
+    print_step("Step 3: Text similarities")
     text_similarities.similarity(parameter)
+    print_step("End step 3")

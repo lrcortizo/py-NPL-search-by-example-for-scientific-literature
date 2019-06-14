@@ -41,16 +41,14 @@ def write_xml(data, parameter):
 
     else:
         #write result into a xml file
-        parameter.create_output_directory()
         f=open(parameter.scrapper_result ,"w", encoding='utf-8')
         f.write(data)
         f.close()
         print ("Search results stored in " + parameter.scrapper_result)
 
 def scrape(parameter):
-    print("----Step 1: Scraping pubmed database")
     searchResults = search(parameter)
     fetchResults = fetch_details(searchResults['IdList'])
     write_xml(fetchResults, parameter)
-    print("----End step 1\n")
+
     return fetchResults

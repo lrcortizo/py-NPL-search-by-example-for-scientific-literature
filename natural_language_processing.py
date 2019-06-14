@@ -35,8 +35,6 @@ def preprocessing(article_list):
     return texts
 
 def process_text(parameter):
-    print("----Step 2: Text processing")
-
     #Check if necessary resources are avaliable
     nltk_check()
 
@@ -49,5 +47,4 @@ def process_text(parameter):
     corpus = [dictionary.doc2bow(text) for text in texts]
     corpora.MmCorpus.serialize(parameter.corpus, corpus)
 
-    print("----End step 2\n")
     return article_list
