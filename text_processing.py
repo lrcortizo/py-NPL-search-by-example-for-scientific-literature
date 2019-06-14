@@ -1,7 +1,17 @@
 import logging
+import nltk
 from bs4 import BeautifulSoup
 from article import Article
 from gensim import corpora
+from smart_open import smart_open
+
+def nltk_check():
+	try:
+		nltk.data.find('tokenizers/punkt')
+		nltk.data.find('corpora/stopwords')
+	except LookupError:
+		nltk.download('punkt')
+		nltk.download('stopwords')
 
 def parse_xml(xml_path):
     #parse xml file into a list of Article objects
@@ -29,7 +39,9 @@ def preprocessing(article_list):
 def process_text(parameter):
     print("----Step 2: Text processing")
     #logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-
+	
+    nltk_check()
+	
     article_list = parse_xml(parameter.scrapper_result)
     texts = preprocessing(article_list)
     #print(texts)

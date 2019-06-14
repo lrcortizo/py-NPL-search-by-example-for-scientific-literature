@@ -42,7 +42,7 @@ def write_xml(data, parameter):
     else:
         #write result into a xml file
         parameter.create_output_directory()
-        f=open(parameter.scrapper_result ,"w")
+        f=open(parameter.scrapper_result ,"w", encoding='utf-8')
         f.write(data)
         f.close()
         print ("Search results stored in " + parameter.scrapper_result)
