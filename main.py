@@ -1,18 +1,37 @@
 import sys
 import os
+import re
 import getopt
+import logging
 import web_scraper
 import natural_language_processing
 import text_similarities
 from parameter import Parameter
 
+def valid_file(file):
+    if os.path.isfile(file) and file.endswith('.txt'):
+        return True
+    return False
+
+def valid_directory(dir):
+    pattern = re.compile("^[\w\_.@()-]+/?$")
+    if pattern.match(dir) is None:
+        return False
+    return True
+
+def valid_number(num):
+    pattern = re.compile(r'\d+')
+    if not pattern.match(num) is None and int(num) > 0:
+        return True
+    return False
+
 def cli_params(argv):
     #Initialize input params variables
     search_term = ''
     file = ''
-    output_directory = ''
-    max_results = ''
-    verbose = False
+    output_directory = './' #default
+    max_results = '10' #default
+    verbose = False #default
 
     #get params
     try:
@@ -21,8 +40,9 @@ def cli_params(argv):
         print ('main.py -s <search_term>  -f <input_file> -d <output_directory> -n <results_number>')
         sys.exit(2)
 
-    #parse cli params
+    #parse and check cli params
     for opt, arg in opts:
+        #Help
         if opt in ("-h", "--help"):
             print ('usage: main.py -s <search_term> -f <input_file> -d <output_directory> -n <results_number>\n\
 Options and arguments:\n\
@@ -32,31 +52,50 @@ Options and arguments:\n\
   -n, --results_number: Number of results in pubmed search\n\
   -v, --verbose: Verbose mode')
             sys.exit()
+
+        #Search term
         elif opt in ("-s", "--search"):
-            search_term = arg
-        elif opt in ("-f", "--file"):
-            file = arg
-            if not os.path.isfile(file) or not file.endswith('.txt'):
-                print ('You must introduce a valid input file. Check path and format(txt)')
+            if len(arg) > 2:
+                search_term = arg
+            else:
+                print ('You must introduce a valid search term. At least 3 characters.')
                 sys.exit()
+
+        #Reference file
+        elif opt in ("-f", "--file"):
+            if valid_file(arg):
+                file = arg
+            else:
+                print ('You must introduce a valid input file. Check path and format(txt).')
+                sys.exit()
+
+        #Output directory
         elif opt in ("-d", "--dir"):
-            output_directory = arg
+            if arg.strip() and valid_directory(arg):
+                output_directory = arg
+            else:
+                print ('You must introduce a valid directory name.')
+                sys.exit()
+
+        #Results number
         elif opt in ("-n", "--number"):
-            max_results = arg
+            if valid_number(arg):
+                max_results = arg
+            else:
+                print ('You must introduce a valid result number.')
+                sys.exit()
+
+        #Verbose mode
         elif opt in ("-v", "--verbose"):
             verbose = True
 
-    #check valid params
-    if not search_term.strip():
-        print ('You must introduce a search term')
+    #check required params
+    if not search_term:
+        print ('You must introduce a search term.')
         sys.exit()
-    elif not file.strip():
-        print ('You must introduce a input file')
+    elif not file:
+        print ('You must introduce a input file.')
         sys.exit()
-    elif not output_directory.strip():
-        self.output_directory = './'
-    elif not max_results.strip():
-        self.max_results = '10'
 
     #object with the params configuration
     parameter = Parameter(search_term, file, output_directory, max_results, verbose)
@@ -64,6 +103,10 @@ Options and arguments:\n\
 
 if __name__ == "__main__":
     parameter = cli_params(sys.argv[1:])
+
+    if parameter.verbose:
+        logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+
     #Step 1: Web scraping
     web_scraper.scrape(parameter)
     #Step 2: Text processing
