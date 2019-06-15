@@ -1,5 +1,5 @@
 ## Query-by-example-for-systematic-scientific-literature-searches
-##### Query-by-example pipeline for scientific literature searches using web scraping, natural language processing and machine learning clasifiers
+##### Query-by-example tool for scientific literature searches using web scraping, natural language processing and neural networks
 ###### Usage:
 ```
 main.py -s <search_term>  -f <input_file> -d <output_directory> -n <results_number>

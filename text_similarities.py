@@ -28,7 +28,8 @@ def similarity(parameter, articles):
     tfidf = models.TfidfModel(corpus)
     corpus_tfidf = tfidf[corpus]
     #Double wrapping with lsi
-    lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=2)
+    lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=20)
+    lsi.print_topics(20)
     corpus_lsi = lsi[corpus_tfidf]
 
     #Reference file to compare
