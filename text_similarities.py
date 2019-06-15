@@ -17,7 +17,6 @@ def write_output(parameter, results):
     f.close()
     print ("Results stored in " + parameter.output_result)
 
-
 def similarity(parameter, articles):
     #load dictionary and corpus
     dictionary = corpora.Dictionary.load(parameter.dictionary)
@@ -28,17 +27,23 @@ def similarity(parameter, articles):
     tfidf = models.TfidfModel(corpus)
     corpus_tfidf = tfidf[corpus]
     #Double wrapping with lsi
-    lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=20)
-    lsi.print_topics(20)
+    lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=600)
+    #lsi.print_topics(600)
     corpus_lsi = lsi[corpus_tfidf]
+
+    lda = models.LdaModel(corpus, id2word=dictionary, num_topics=600)
+    corpus_lda = lsi[corpus]
 
     #Reference file to compare
     vec_bow = dictionary.doc2bow(parameter.get_input_file_array())
     vec_tfidf = tfidf[vec_bow]
     vec_lsi = lsi[vec_tfidf]
+    vec_lda = lda[vec_bow]
 
     #Similarites
     index = similarities.MatrixSimilarity(corpus_lsi)
+    index.save(parameter.index)
+    index = similarities.MatrixSimilarity.load(parameter.index)
     sims = sorted(enumerate(index[vec_lsi]), key=lambda item: -item[1])
     #Print sorted articles
     results = build_output(sims, articles)

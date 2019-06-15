@@ -1,4 +1,5 @@
 import string
+from collections import defaultdict
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
@@ -9,6 +10,14 @@ class Article:
         self.article_title = article_title
         self.abstract = abstract
         self.abstract_array = None
+
+    def frequency(self, words):
+        frequency = defaultdict(int)
+        for word in words:
+            frequency[word] += 1
+
+        words = [word for word in words if frequency[word] > 1]
+        return words
 
     def get_abstract_array(self):
         #tokenize the abstract
@@ -24,6 +33,8 @@ class Article:
             words = [word for word in stripped if word.isalpha()]
             # filter out stop words
             stop_words = set(stopwords.words('english'))
-            self.abstract_array = [w for w in words if not w in stop_words]
+            words_cleaned = [w for w in words if not w in stop_words]
+            
+            self.abstract_array = self.frequency(words_cleaned)
 
         return self.abstract_array

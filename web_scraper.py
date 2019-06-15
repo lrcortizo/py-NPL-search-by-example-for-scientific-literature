@@ -8,7 +8,6 @@ def search(parameter):
     Entrez.email = 'your.email@example.com'
     try:
         searchHandle = Entrez.esearch(db='pubmed',
-                                sort='relevance',
                                 retmax=parameter.max_results,
                                 retmode='xml',
                                 term=parameter.search_term)

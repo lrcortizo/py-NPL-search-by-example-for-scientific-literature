@@ -50,4 +50,6 @@ def process_docs(parameter):
     corpus = [dictionary.doc2bow(array) for array in doc_arrays]
     corpora.MmCorpus.serialize(parameter.corpus, corpus)
 
+    print(corpus)
+
     return article_list

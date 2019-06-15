@@ -1,6 +1,7 @@
 import os
 import re
 import string
+from collections import defaultdict
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
@@ -15,6 +16,7 @@ class Parameter:
         self.output_result = self.output_directory + "result.txt"
         self.dictionary = self.output_directory + "dictionary.dict"
         self.corpus = self.output_directory + "corpus.mm"
+        self.index = self.output_directory + "similarity.index"
         self.input_file_text = None
         self.verbose = verbose
 
@@ -44,6 +46,11 @@ class Parameter:
             stripped = [w.translate(table) for w in tokens]
             words = [word for word in stripped if word.isalpha()]
             stop_words = set(stopwords.words('english'))
-            self.input_file_text = [w for w in words if not w in stop_words]
+            words_cleaned = [w for w in words if not w in stop_words]
+            frequency = defaultdict(int)
+            for word in words_cleaned:
+                frequency[word] += 1
+            self.input_file_text = [word for word in words_cleaned if frequency[word] > 1]
+
 
         return self.input_file_text
