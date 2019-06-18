@@ -40,13 +40,14 @@ def write_xml(data, parameter):
 
     else:
         #write result into a xml file
-        f=open(parameter.scrapper_result ,"w", encoding='utf-8')
+        f=open(parameter.data_extraction_result ,"w", encoding='utf-8')
         f.write(data)
         f.close()
-        print ("Search results stored in " + parameter.scrapper_result)
+        print ("Search results stored in " + parameter.data_extraction_result)
 
-def scrape(parameter):
+def extract(parameter):
     searchResults = search(parameter)
+    print(searchResults['IdList'])
     fetchResults = fetch_details(searchResults['IdList'])
     write_xml(fetchResults, parameter)
 

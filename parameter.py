@@ -12,8 +12,8 @@ class Parameter:
         self.output_directory = self.check_directory_format(output_directory)
         self.create_output_directory()
         self.max_results = max_results
-        self.scrapper_result = self.output_directory + "web_scraper_results.xml"
-        self.output_result = self.output_directory + "result.txt"
+        self.data_extraction_result = self.output_directory + "data_extraction_result.xml"
+        self.final_result = self.output_directory + "similarities_result.txt"
         self.dictionary = self.output_directory + "dictionary.dict"
         self.corpus = self.output_directory + "corpus.mm"
         self.index = self.output_directory + "similarity.index"

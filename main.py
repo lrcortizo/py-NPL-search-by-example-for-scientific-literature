@@ -3,7 +3,7 @@ import os
 import re
 import getopt
 import logging
-import web_scraper
+import extract_data
 import natural_language_processing
 import text_similarities
 from parameter import Parameter
@@ -114,7 +114,7 @@ if __name__ == "__main__":
 
     #Step 1: Web scraping
     print_step("Step 1: Scraping pubmed database")
-    web_scraper.scrape(parameter)
+    extract_data.extract(parameter)
     print_step("End step 1")
 
     #Step 2: Text processing

@@ -12,10 +12,10 @@ def build_output(sims, articles):
 
 def write_output(parameter, results):
     #write results into a txt file
-    f=open(parameter.output_result ,"w", encoding='utf-8')
+    f=open(parameter.final_result ,"w", encoding='utf-8')
     f.write(results)
     f.close()
-    print ("Results stored in " + parameter.output_result)
+    print ("Results stored in " + parameter.final_result)
 
 def similarity(parameter, articles):
     #load dictionary and corpus
@@ -27,12 +27,12 @@ def similarity(parameter, articles):
     tfidf = models.TfidfModel(corpus)
     corpus_tfidf = tfidf[corpus]
     #Double wrapping with lsi
-    lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=600)
+    lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=50)
     #lsi.print_topics(600)
     corpus_lsi = lsi[corpus_tfidf]
 
-    lda = models.LdaModel(corpus, id2word=dictionary, num_topics=600)
-    corpus_lda = lsi[corpus]
+    lda = models.LdaModel(corpus, id2word=dictionary, num_topics=20)
+    corpus_lda = lda[corpus]
 
     #Reference file to compare
     vec_bow = dictionary.doc2bow(parameter.get_input_file_array())

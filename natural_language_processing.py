@@ -24,7 +24,7 @@ def parse_xml(xml_path):
     titles = soup.find_all('ArticleTitle')
     abstracts = soup.find_all('Abstract')
 
-    for i in range(0, len(pmids)):
+    for i in range(0, len(titles)):
         article_list.append(Article(pmids[i].text, titles[i].text, abstracts[i].text))
     return article_list
 
@@ -40,7 +40,7 @@ def process_docs(parameter):
     nltk_check()
 
     #Parse xml file
-    article_list = parse_xml(parameter.scrapper_result)
+    article_list = parse_xml(parameter.data_extraction_result)
     doc_arrays = preprocessing(article_list)
 
     #Creating dictionary and corpus
