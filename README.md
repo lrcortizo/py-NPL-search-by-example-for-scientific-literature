@@ -1,14 +1,14 @@
 ## Query-by-example-for-systematic-scientific-literature-searches
-##### Query-by-example tool for scientific literature searches using web scraping, natural language processing and neural networks
+##### Query-by-example tool for scientific literature searches using web scraping, natural language processing and machine learning
 ###### Usage:
 ```
-main.py -s <search_term>  -f <input_file> -d <output_directory> -n <results_number>
+python QueryByExample.py -s <search_term>  -f <input_file> -d <output_directory> -n <results_number> -v
 Options and arguments:
   -s, --search: Search term to query pubmed
   -f, --input_file: Input file to compare the results of query
-  -d, --dir: Output directory to the output and temporary files
-  -n, --results_number: Number of results in pubmed search
-  -v, --verbose: Verbose mode
+  -d, --dir: Output directory to the output and temporary files (Optional, current directory by default)
+  -n, --results_number: Number of results in pubmed search (Optional, 10 results by default)
+  -v, --verbose: Verbose mode (Optional, no verbose mode by default)
 ```
 ###### Requirements:
 - Python >= 3.7.2
@@ -17,4 +17,18 @@ Options and arguments:
   - BeautifulSoup: ```pip install beautifulsoup4```
   - lxml: ```pip install lxml```
   - nltk: ```pip install nltk```
-- C Compiler
+
+###### Notes:
+- Scripts need execute permissions, as well as the input file requires read permissions and the output directory read/write permissions.
+- The search term must be enclosed in quotation marks (if it consists of more than one word).
+- The output directory cannot contain special characters, only _ - ( ) @ are allowed.
+
+If some argument is incorrect, an error message will be printed in the console indicating which data is wrong. The script execution will generate the following files in the output directory:
+- data_extraction_result.xml
+- similarities_result.txt
+- tmp/ directory
+  - dictionary.dict
+  - corpus.mm
+  - similarity.index
+
+The console output will show different messages depending on whether the verbose mode is activated. The output is divided in three 3 steps (data extraction, natural language processing and classification) showing the info of each one.
