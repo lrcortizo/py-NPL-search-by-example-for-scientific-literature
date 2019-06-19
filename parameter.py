@@ -4,6 +4,7 @@ import string
 from collections import defaultdict
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
 
 class Parameter:
     def __init__(self, search_term, file, output_directory, max_results, verbose):
@@ -38,7 +39,7 @@ class Parameter:
             file = open(self.file, mode='r')
             text = file.read()
             file.close()
-
+            stemmer = PorterStemmer()
             #tokenize, remove stopwords and punctuation
             tokens = word_tokenize(text)
             tokens = [w.lower() for w in tokens]
@@ -46,11 +47,14 @@ class Parameter:
             stripped = [w.translate(table) for w in tokens]
             words = [word for word in stripped if word.isalpha()]
             stop_words = set(stopwords.words('english'))
-            words_cleaned = [w for w in words if not w in stop_words]
+            cleaned_tokens = [word for word in stripped if word.isalpha()]
+            stop_words = set(stopwords.words('english'))
+            stopped_tokens = [w for w in cleaned_tokens if not w in stop_words]
+            stemmed_tokens = [stemmer.stem(w) for w in stopped_tokens]
             frequency = defaultdict(int)
-            for word in words_cleaned:
+            for word in stemmed_tokens:
                 frequency[word] += 1
-            self.input_file_text = [word for word in words_cleaned if frequency[word] > 1]
+            self.input_file_text = [word for word in stemmed_tokens if frequency[word] > 1]
 
 
         return self.input_file_text

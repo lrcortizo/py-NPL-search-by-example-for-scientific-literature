@@ -2,6 +2,7 @@ import string
 from collections import defaultdict
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
 
 class Article:
 
@@ -22,6 +23,7 @@ class Article:
     def get_abstract_array(self):
         #tokenize the abstract
         if self.abstract_array is None:
+            stemmer = PorterStemmer()
             # split into words
             tokens = word_tokenize(self.abstract)
             # convert to lower case
@@ -30,11 +32,12 @@ class Article:
             table = str.maketrans('', '', string.punctuation)
             stripped = [w.translate(table) for w in tokens]
             # remove remaining tokens that are not alphabetic
-            words = [word for word in stripped if word.isalpha()]
+            cleaned_tokens = [word for word in stripped if word.isalpha()]
             # filter out stop words
             stop_words = set(stopwords.words('english'))
-            words_cleaned = [w for w in words if not w in stop_words]
-            
-            self.abstract_array = self.frequency(words_cleaned)
+            stopped_tokens = [w for w in cleaned_tokens if not w in stop_words]
+            stemmed_tokens = [stemmer.stem(w) for w in stopped_tokens]
+
+            self.abstract_array = self.frequency(stemmed_tokens)
 
         return self.abstract_array
