@@ -1,4 +1,3 @@
-import os.path
 import string
 from gensim import corpora
 from gensim import models
@@ -41,49 +40,54 @@ def prepare_corpus(doc_clean):
     doc_term_matrix = [dictionary.doc2bow(doc) for doc in doc_clean]
     return dictionary,doc_term_matrix
 
-def create_gensim_lsa_model(doc_clean,number_of_topics,words):
-
+def lsi_model(doc_clean,number_of_topics,words):
     dictionary,doc_term_matrix=prepare_corpus(doc_clean)
     tfidf = models.TfidfModel(doc_term_matrix)
     corpus_tfidf = tfidf[doc_term_matrix]
-    # generate LSA model
-    lsamodel = models.LsiModel(corpus_tfidf, num_topics=number_of_topics, id2word = dictionary)  # train model
-    print(lsamodel.print_topics(number_of_topics))
-    corpus_lsa = lsamodel[corpus_tfidf]
+    lsi_model = models.LsiModel(corpus_tfidf, num_topics=number_of_topics, id2word = dictionary)
 
-    for doc in corpus_lsa:
+    for topic in lsi_model.print_topics(number_of_topics):
+        print(topic)
+
+    corpus_lsi = lsi_model[corpus_tfidf]
+
+    for i, doc in enumerate(corpus_lsi):
+        if i==0:
+            print("\nSPORT\n")
+        elif i==5:
+            print("\nPOLITICS\n")
+        elif i==10:
+            print("\nBIOLOGY\n")
+        elif i==15:
+            print("\nMECHANICS\n")
         print(doc)
 
-    return lsamodel
-
-def compute_coherence_values(dictionary, doc_term_matrix, doc_clean, stop, start=2, step=3):
+def compute_coherence_values(dictionary, doc_term_matrix, doc_clean, start, stop, step):
     coherence_values = []
     model_list = []
     for num_topics in range(start, stop, step):
-        # generate LSA model
-        model = models.LsiModel(doc_term_matrix, num_topics=num_topics, id2word = dictionary)  # train model
+        model = models.LsiModel(doc_term_matrix, num_topics=num_topics, id2word = dictionary)
         model_list.append(model)
         coherencemodel = models.CoherenceModel(model=model, texts=doc_clean, dictionary=dictionary, coherence='c_v')
         coherence_values.append(coherencemodel.get_coherence())
     return model_list, coherence_values
 
-def plot_graph(doc_clean,start, stop, step):
-    dictionary,doc_term_matrix=prepare_corpus(doc_clean)
-    model_list, coherence_values = compute_coherence_values(dictionary, doc_term_matrix,doc_clean,
-                                                            stop, start, step)
+def plot_graph(texts_array, start, stop, step):
+    dictionary, doc_term_matrix=prepare_corpus(texts_array)
+    model_list, coherence_values = compute_coherence_values(dictionary, doc_term_matrix,texts_array,
+                                                            start, stop, step)
     # Show graph
     x = range(start, stop, step)
     plt.plot(x, coherence_values)
-    plt.xlabel("Number of Topics")
+    plt.xlabel("Number of topics")
     plt.ylabel("Coherence score")
     plt.legend(("coherence_values"), loc='best')
     plt.show()
 
-# LSA Model
-number_of_topics=4
 words=10
+number_of_topics=4
 document_list=load_data("texts.txt")
-clean_text=preprocess_data(document_list)
-model=create_gensim_lsa_model(clean_text,number_of_topics,words)
-#start,stop,step=2,12,1
-#plot_graph(clean_text,start,stop,step)
+texts_array=preprocess_data(document_list)
+lsi_model(texts_array,number_of_topics,words)
+#start,stop,step=2,20,1
+#plot_graph(texts_array,start,stop,step)
