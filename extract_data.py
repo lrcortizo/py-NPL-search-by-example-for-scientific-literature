@@ -47,7 +47,6 @@ def write_xml(data, parameter):
 
 def extract(parameter):
     searchResults = search(parameter)
-    print(searchResults['IdList'])
     fetchResults = fetch_details(searchResults['IdList'])
     write_xml(fetchResults, parameter)
 

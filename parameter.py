@@ -45,8 +45,6 @@ class Parameter:
             tokens = [w.lower() for w in tokens]
             table = str.maketrans('', '', string.punctuation)
             stripped = [w.translate(table) for w in tokens]
-            words = [word for word in stripped if word.isalpha()]
-            stop_words = set(stopwords.words('english'))
             cleaned_tokens = [word for word in stripped if word.isalpha()]
             stop_words = set(stopwords.words('english'))
             stopped_tokens = [w for w in cleaned_tokens if not w in stop_words]
