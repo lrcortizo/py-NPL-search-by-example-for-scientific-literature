@@ -15,13 +15,16 @@ Output : boolean check
 """
 def valid_file(file):
     if os.path.isfile(file):
-        if file.endswith('.txt'):
-            if os.path.getsize(my_path) > 0:
-                return True
+        if os.access(file, os.R_OK):
+            if file.endswith('.txt'):
+                if os.path.getsize(my_path) > 0:
+                    return True
+                else:
+                    print ('The example file is empty.')
             else:
-                print ('The example file is empty.')
+                print ('The example file must have txt format.')
         else:
-            print ('The example file must have txt format.')
+            print ('The example file must have read permissions.')
     else:
         print ('Example file does not exist.')
     return False
@@ -83,7 +86,7 @@ Options and arguments:\n\
 
         # Search term
         elif opt in ("-s", "--search"):
-            if len(arg.strip()) > 2:
+            if arg.strip():
                 search_term = arg
             else:
                 print ('You must introduce a valid search term. At least 3 characters.')
