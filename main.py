@@ -6,6 +6,7 @@ import logging
 import extract_data
 import natural_language_processing
 import text_similarities
+import multiprocessing
 from parameter import Parameter
 
 """
@@ -126,7 +127,11 @@ Options and arguments:\n\
 
         # Number of CPU processors
         elif opt in ("-p", "--procesors"):
-            processors = arg
+            if int(arg) <= multiprocessing.cpu_count():
+                processors = arg
+            else:
+                print ('Too much processors. This computer have '+str(multiprocessing.cpu_count())+' processors')
+                sys.exit()
 
         # Number of topics
         elif opt in ("-t", "--topics"):
