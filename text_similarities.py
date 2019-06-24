@@ -3,25 +3,19 @@ import natural_language_processing
 from gensim import corpora
 from gensim import models
 
-def compute_coherence_values(dictionary, doc_term_matrix, doc_clean, start, stop, step):
-    """
-    Input   : dictionary : Gensim dictionary
-              corpus : Gensim corpus
-              texts : List of input texts
-              stop : Max num of topics
-    purpose : Compute c_v coherence for various number of topics
-    Output  : model_list : List of LSA topic models
-              coherence_values : Coherence values corresponding to the LDA model with respective number of topics
-    """
+def get_coherence_value(dictionary, doc_term_matrix, doc_clean, start, stop, step):
     coherence_value = 0
     best_model = None
+    best_num_topics = 0
     for num_topics in range(start, stop, step):
         # generate LSA model
         model = models.LsiModel(doc_term_matrix, num_topics=num_topics, id2word = dictionary)  # train model
         coherencemodel = models.CoherenceModel(model=model, texts=doc_clean, dictionary=dictionary, coherence='c_v', processes=2)
         if(coherence_value < coherencemodel.get_coherence()):
+            coherence_value = coherencemodel.get_coherence()
             best_model = model
-    return best_model
+            best_num_topics = num_topics
+    return best_model, coherence_value, best_num_topics
 
 def build_output(sims, articles):
     results = "\n"+20*"-"+"RESULTS"+20*"-"+"\n\n"
@@ -39,6 +33,8 @@ def write_output(parameter, results):
     print ("Results stored in " + parameter.final_result)
 
 def similarity(parameter, articles):
+    coherence_value = 0
+    num_topics = 0
     #load dictionary and corpus
     doc_arrays = natural_language_processing.preprocessing(articles)
     dictionary = corpora.Dictionary.load(parameter.dictionary)
@@ -50,8 +46,8 @@ def similarity(parameter, articles):
     corpus_tfidf = tfidf[doc_term_matrix]
     #Double wrapping with lsi
 
-    lsi_model = compute_coherence_values(dictionary, corpus_tfidf, doc_arrays, 2, 50, 2)
-
+    #lsi_model, coherence_value, num_topics = get_coherence_value(dictionary, corpus_tfidf, doc_arrays, 10, 50, 1)
+    lsi_model = models.LsiModel(corpus_tfidf, num_topics=50, id2word = dictionary)
     corpus_lsi = lsi_model[corpus_tfidf]
 
     #Reference file to compare
@@ -66,5 +62,7 @@ def similarity(parameter, articles):
     sims = sorted(enumerate(index[vec_lsi]), key=lambda item: -item[1])
     #Print sorted articles
     results = build_output(sims, articles)
+    if coherence_value > 0:
+        print("\nCoherence value: "+str(coherence_value)+", Number of topics: "+str(num_topics))
     print(results)
     write_output(parameter, results)

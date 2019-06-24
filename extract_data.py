@@ -2,26 +2,38 @@ import sys
 from Bio import Entrez
 from parameter import Parameter
 
+"""
+Searchs and get PMIDs from PubMed database
+Input  : parameter object
+Output : PubMed IDs list
+"""
 def search(parameter):
-    #query to pubmed
-    #search and retrieve primary IDs and term translations and optionally retains results
-    Entrez.email = 'your.email@example.com'
+    Entrez.email = 'email@example.com'
     try:
+        print ("* Querying PubMed ...")
+        # searchs and retrieves primary IDs, term translations and optionally retains results
         searchHandle = Entrez.esearch(db='pubmed',
                                 retmax=parameter.max_results,
                                 retmode='xml',
                                 term=parameter.search_term)
         searchResults = Entrez.read(searchHandle)
         searchHandle.close()
-        return searchResults
+        print ("** "+str(len(searchResults['IdList'])) + " articles founded for '"+parameter.search_term+"'")
+        return searchResults['IdList']
     except:
         return None
 
+"""
+Retrives the articles from the PubMed IDs
+Input  : PubMed IDs
+Output : result file in xml format
+"""
 def fetch_details(id_list):
-    #retrieve records in the requested format from a list of IDs
     ids = ','.join(id_list)
-    Entrez.email = 'your.email@example.com'
+    Entrez.email = 'email@example.com'
     try:
+        print ("*** Retrieving data ...")
+        # retrieves records in the requested format from a list of IDs
         fetchHandle = Entrez.efetch(db='pubmed',
                                retmode='xml',
                                id=ids)
@@ -31,23 +43,37 @@ def fetch_details(id_list):
     except:
         return None
 
+"""
+Writes the result in a xml file
+Input  : Results of querying PubMed
+         parameter object
+"""
 def write_xml(data, parameter):
-    #check and write results
+    #check no results
     if data==None:
         print (80*"*"+"\n")
         print ("This search returned no hits")
         sys.exit(1)
 
     else:
-        #write result into a xml file
-        f=open(parameter.data_extraction_result ,"w", encoding='utf-8')
-        f.write(data)
-        f.close()
-        print ("Search results stored in " + parameter.data_extraction_result)
+        try:
+            #write result into a xml file
+            f=open(parameter.data_extraction_result ,"w", encoding='utf-8')
+            f.write(data)
+            f.close()
+            print ("**** Search results stored in " + parameter.data_extraction_result)
+        except:
+            print (80*"*"+"\n")
+            sys.exit("The xml file could not be saved")
 
+"""
+Main method of extrac_data
+Input  : parameter object
+Output : Resulting PubMed IDs
+"""
 def extract(parameter):
-    searchResults = search(parameter)
-    fetchResults = fetch_details(searchResults['IdList'])
+    pubmedIDs = search(parameter)
+    fetchResults = fetch_details(pubmedIDs)
     write_xml(fetchResults, parameter)
 
-    return fetchResults
+    return pubmedIDs
