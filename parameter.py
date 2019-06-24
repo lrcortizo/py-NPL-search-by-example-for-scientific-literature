@@ -7,7 +7,8 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
 class Parameter:
-    def __init__(self, search_term, file, output_directory, max_results, verbose):
+    def __init__(self, search_term, file, output_directory, max_results,
+        verbose, processors, topics, max_topics, coherence_model):
         self.search_term = search_term
         self.file = file
         self.output_directory = self.check_directory_format(output_directory)
@@ -20,6 +21,10 @@ class Parameter:
         self.index = self.output_directory + "similarity.index"
         self.input_file_text = None
         self.verbose = verbose
+        self.processors = processors
+        self.topics = topics
+        self.max_topics = max_topics
+        self.coherence_model = coherence_model
 
     def check_directory_format(self, dir):
         #Check format of directory path

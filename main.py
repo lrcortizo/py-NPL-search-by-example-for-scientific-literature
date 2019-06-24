@@ -17,7 +17,7 @@ def valid_file(file):
     if os.path.isfile(file):
         if os.access(file, os.R_OK):
             if file.endswith('.txt'):
-                if os.path.getsize(my_path) > 0:
+                if os.path.getsize(file) > 0:
                     return True
                 else:
                     print ('The example file is empty.')
@@ -63,10 +63,15 @@ def cli_params(argv):
     output_directory = './' # default
     max_results = '10' # default
     verbose = False # default
+    processors = 1 # default
+    topics =  20 # default
+    max_topics = 200 # default
+    coherence_model = False # default
 
     # get params
     try:
-        opts, args = getopt.getopt(argv,"hs:f:d:n:v",["help","search=","file=","dir=","number=","verbose"])
+        opts, args = getopt.getopt(argv,"hs:f:d:n:vp:t:m:c",["help","search=","file=","dir=",
+            "number=","verbose","processors","topics","max_topics","coherence_model"])
     except getopt.GetoptError:
         print ('python QueryByExample.py -s <search_term> -f <input_file> ')
         sys.exit(2)
@@ -81,7 +86,11 @@ Options and arguments:\n\
   -f, --input_file: Input file to compare the results of query\n\
   -d, --dir: Output directory to the output and temporary files\n\
   -n, --results_number: Number of results in pubmed search\n\
-  -v, --verbose: Verbose mode')
+  -v, --verbose: Verbose mode\n\
+  -p, --procesors: Number of CPU processors\n\
+  -t, --topics: Number of topics\n\
+  -m, --max_topics: Maximum number of topics\n\
+  -c, --coherence_model: Coherence Model mode')
             sys.exit()
 
         # Search term
@@ -115,9 +124,21 @@ Options and arguments:\n\
                 print ('You must introduce a valid result number.')
                 sys.exit()
 
-        # Verbose mode
-        elif opt in ("-v", "--verbose"):
-            verbose = True
+        # Number of CPU processors
+        elif opt in ("-p", "--procesors"):
+            processors = arg
+
+        # Number of topics
+        elif opt in ("-t", "--topics"):
+            topics = arg
+
+        # Max topics
+        elif opt in ("-m", "--max_topics"):
+            max_topics = arg
+
+        # Coherence model mode
+        elif opt in ("-c", "--coherence_model"):
+            coherence_model = True
 
     # check required params
     if not search_term:
@@ -128,7 +149,8 @@ Options and arguments:\n\
         sys.exit()
 
     # object with the params configuration
-    parameter = Parameter(search_term, file, output_directory, max_results, verbose)
+    parameter = Parameter(search_term, file, output_directory, max_results, verbose,
+        processors, topics, max_topics, coherence_model)
     return parameter
 
 """
