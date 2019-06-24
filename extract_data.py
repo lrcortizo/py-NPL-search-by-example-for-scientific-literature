@@ -64,7 +64,8 @@ def write_xml(data, parameter):
             print ("**** Search results stored in " + parameter.data_extraction_result)
         except:
             print (80*"*"+"\n")
-            sys.exit("The xml file could not be saved")
+            print("The xml file could not be saved")
+            sys.exit(1)
 
 """
 Main method of extrac_data

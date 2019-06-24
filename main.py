@@ -14,8 +14,16 @@ Input  : input file
 Output : boolean check
 """
 def valid_file(file):
-    if os.path.isfile(file) and file.endswith('.txt'):
-        return True
+    if os.path.isfile(file):
+        if file.endswith('.txt'):
+            if os.path.getsize(my_path) > 0:
+                return True
+            else:
+                print ('The example file is empty.')
+        else:
+            print ('The example file must have txt format.')
+    else:
+        print ('Example file does not exist.')
     return False
 
 """
@@ -57,14 +65,14 @@ def cli_params(argv):
     try:
         opts, args = getopt.getopt(argv,"hs:f:d:n:v",["help","search=","file=","dir=","number=","verbose"])
     except getopt.GetoptError:
-        print ('main.py -s <search_term>  -f <input_file> -d <output_directory> -n <results_number>')
+        print ('python QueryByExample.py -s <search_term> -f <input_file> ')
         sys.exit(2)
 
     # parse and check cli params
     for opt, arg in opts:
         # Help
         if opt in ("-h", "--help"):
-            print ('usage: main.py -s <search_term> -f <input_file> -d <output_directory> -n <results_number>\n\
+            print ('usage: python QueryByExample.py -s <search_term> -f <input_file> \n\
 Options and arguments:\n\
   -s, --search: Search term to query pubmed\n\
   -f, --input_file: Input file to compare the results of query\n\
@@ -75,7 +83,7 @@ Options and arguments:\n\
 
         # Search term
         elif opt in ("-s", "--search"):
-            if len(arg) > 2:
+            if len(arg.strip()) > 2:
                 search_term = arg
             else:
                 print ('You must introduce a valid search term. At least 3 characters.')
@@ -86,7 +94,6 @@ Options and arguments:\n\
             if valid_file(arg):
                 file = arg
             else:
-                print ('You must introduce a valid input file. Check path and format(txt).')
                 sys.exit()
 
         # Output directory
