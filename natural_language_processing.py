@@ -1,7 +1,12 @@
 import sys
+import string
 import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem.porter import PorterStemmer
 from bs4 import BeautifulSoup
 from gensim import corpora
+from collections import defaultdict
 from article import Article
 
 """
@@ -39,18 +44,41 @@ def parse_xml(pmids, results):
         sys.exit(1)
     return article_list
 
-"""
-Preprocessing of abstract texts before create corpus
-Input  : Article list
-Output : tokenized Article objects list
-"""
-def preprocessing(article_list):
-    tokenized_list = []
-    print("** Preprocessing and tokenizing texts...")
-    for article in article_list:
-        tokenized_list.append(article.get_abstract_array())
+def frequency(words):
+    frequency = defaultdict(int)
+    for word in words:
+        frequency[word] += 1
 
-    return tokenized_list
+    words = [word for word in words if frequency[word] > 1]
+    return words
+
+"""
+Preprocessing of texts
+Input  : plain text
+Output : tokenized text
+"""
+def preprocessing(text):
+    tokenized_list = []
+    stemmer = PorterStemmer()
+    table = str.maketrans('', '', string.punctuation)
+    stop_words = set(stopwords.words('english'))
+
+    # split into words
+    tokens = word_tokenize(text)
+    # convert to lower case
+    tokens = [w.lower() for w in tokens]
+    # remove punctuation from each word
+    stripped = [w.translate(table) for w in tokens]
+    # remove remaining tokens that are not alphabetic
+    cleaned_tokens = [word for word in stripped if word.isalpha()]
+    # filter out stop words
+    stopped_tokens = [w for w in cleaned_tokens if not w in stop_words]
+    # stemming
+    stemmed_tokens = [stemmer.stem(w) for w in stopped_tokens]
+    # remove frequency 1 words
+    tokenized_text = frequency(stemmed_tokens)
+
+    return tokenized_text
 
 """
 Creates dictionary and BOW corpus representation
@@ -78,7 +106,6 @@ def prepare_corpus(parameter, tokenized_list):
 Main method of natural_language_processing
 Input  : parameter object, pmids list
 Output : Article object list
-         Tokenized text
          Dictionary
          Corpus
 """
@@ -88,9 +115,17 @@ def process_docs(parameter, pmids, results):
 
     # Parse xml file
     article_list = parse_xml(pmids, results)
-    tokenized_list = preprocessing(article_list)
+
+    # Tokenize example file
+    file = open(parameter.file, mode='r')
+    text = file.read()
+    file.close()
+    parameter.input_file_text = preprocessing(text)
+
+    # tokenized article texts
+    tokenized_list = [article.abstract_array for article in article_list]
 
     # Creates dictionary and corpus
     dictionary, corpus = prepare_corpus(parameter, tokenized_list)
 
-    return article_list, tokenized_list, dictionary, corpus
+    return article_list, dictionary, corpus

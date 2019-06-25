@@ -129,7 +129,7 @@ Options and arguments:\n\
         # Number of CPU processors
         elif opt in ("-p", "--procesors"):
             if int(arg) <= multiprocessing.cpu_count():
-                processors = arg
+                processors = int(arg)
             else:
                 print ('Too much processors. This computer has '+str(multiprocessing.cpu_count())+' processors')
                 sys.exit(1)
@@ -137,7 +137,7 @@ Options and arguments:\n\
         # Number of topics
         elif opt in ("-t", "--topics"):
             if valid_number(arg):
-                topics = arg
+                topics = int(arg)
             else:
                 print ('You must introduce a valid topics number.')
                 sys.exit(1)
@@ -145,7 +145,7 @@ Options and arguments:\n\
         # Max topics
         elif opt in ("-m", "--max_topics"):
             if valid_number(arg):
-                topics = arg
+                max_topics = int(arg)
             else:
                 print ('You must introduce a valid maximum topics number.')
                 sys.exit(1)
@@ -192,10 +192,10 @@ if __name__ == "__main__":
 
     # Step 2: Text processing
     print_step("Step 2: Natural language processing")
-    articles, tokenized_list, dicctionary, corpus = natural_language_processing.process_docs(parameter, pmids, results)
+    articles, dicctionary, corpus = natural_language_processing.process_docs(parameter, pmids, results)
     print_step("End step 2")
 
     # Step 3: Text similarities
     print_step("Step 3: Text similarities")
-    text_similarities.similarity(parameter, articles, tokenized_list, dicctionary, corpus)
+    text_similarities.similarity(parameter, articles, dicctionary, corpus)
     print_step("End step 3")
