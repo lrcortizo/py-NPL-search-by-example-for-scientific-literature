@@ -1,6 +1,5 @@
 import os
 import re
-import string
 
 """
 Class that stores the application configuration

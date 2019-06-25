@@ -44,6 +44,12 @@ def parse_xml(pmids, results):
         sys.exit(1)
     return article_list
 
+
+"""
+Removes words with frequency 1
+Input  : stemmed words
+Output : filter frequency words
+"""
 def frequency(words):
     frequency = defaultdict(int)
     for word in words:
@@ -69,7 +75,6 @@ def preprocessing(text):
     tokens = [w.lower() for w in tokens]
     # remove punctuation from each word
     stripped = [w.translate(table) for w in tokens]
-    # remove remaining tokens that are not alphabetic
     cleaned_tokens = [word for word in stripped if word.isalpha()]
     # filter out stop words
     stopped_tokens = [w for w in cleaned_tokens if not w in stop_words]
@@ -116,12 +121,12 @@ def process_docs(parameter, pmids, results):
     # Parse xml file
     article_list = parse_xml(pmids, results)
 
+    print("** Building tokenized texts...")
     # Tokenize example file
     file = open(parameter.file, mode='r')
     text = file.read()
     file.close()
     parameter.input_file_text = preprocessing(text)
-
     # tokenized article texts
     tokenized_list = [article.abstract_array for article in article_list]
 
