@@ -11,15 +11,19 @@ def search(parameter):
     Entrez.email = 'email@example.com'
     print ("* Querying PubMed ...")
     # searchs and retrieves primary IDs, term translations and optionally retains results
-    searchHandle = Entrez.esearch(db='pubmed',
-                            retmax=parameter.max_results,
-                            retmode='xml',
-                            term=parameter.search_term)
-    searchResults = Entrez.read(searchHandle)
-    searchHandle.close()
+    try:
+        searchHandle = Entrez.esearch(db='pubmed',
+                                retmax=parameter.max_results,
+                                retmode='xml',
+                                term=parameter.search_term)
+        searchResults = Entrez.read(searchHandle)
+        searchHandle.close()
+    except:
+        print (20*"*"+" Error occurred while searching PubMed")
+        sys.exit(1)
 
     if len(searchResults['IdList']) == 0:
-        print (10*"*"+" This search returned no hits")
+        print (20*"*"+" This search returned no hits\n")
         sys.exit(1)
 
     print ("** "+str(len(searchResults['IdList'])) + " articles founded for '"+parameter.search_term+"'")
@@ -30,8 +34,8 @@ Retrives the articles from the PubMed IDs
 Input  : PubMed IDs
 Output : result file in xml format
 """
-def fetch_details(id_list):
-    ids = ','.join(id_list)
+def fetch_details(pubmedIDs):
+    ids = ','.join(pubmedIDs)
     Entrez.email = 'email@example.com'
     try:
         print ("*** Retrieving data ...")
@@ -41,9 +45,11 @@ def fetch_details(id_list):
                                id=ids)
         fetchResults = fetchHandle.read()
         fetchHandle.close()
-        return fetchResults
     except:
-        return None
+        print (20*"*"+" Error occurred while retrieving data")
+        sys.exit(1)
+    return fetchResults
+
 
 """
 Writes the result in a xml file
@@ -52,14 +58,14 @@ Input  : Results of querying PubMed
 """
 def write_xml(data, parameter):
     try:
+        print ("**** Saving data ...")
         #write result into a xml file
         f=open(parameter.data_extraction_result ,"w", encoding='utf-8')
         f.write(data)
         f.close()
-        print ("**** Search results stored in " + parameter.data_extraction_result)
+        print ("***** Search results stored in " + parameter.data_extraction_result)
     except:
-        print (80*"*"+"\n")
-        print("The xml file could not be saved")
+        print(20*"*"+" The xml file could not be saved")
         sys.exit(1)
 
 """

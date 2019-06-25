@@ -3,6 +3,18 @@ import natural_language_processing
 from gensim import corpora
 from gensim import models
 
+"""
+Compute coherence values to get the best model based on topics number
+Input  : dicctionary
+         document-term MatrixSimilarity
+         tokenized texts
+         start number of topics
+         maximum number of topics
+         increase step
+Output : best scored model
+         best coherence value
+         best number of topics
+"""
 def get_coherence_value(dictionary, doc_term_matrix, doc_clean, start, stop, step):
     coherence_value = 0
     best_model = None
@@ -17,6 +29,13 @@ def get_coherence_value(dictionary, doc_term_matrix, doc_clean, start, stop, ste
             best_num_topics = num_topics
     return best_model, coherence_value, best_num_topics
 
+"""
+Builds the application output
+Input  : similarities
+         articles list
+         increase step
+Output : application output
+"""
 def build_output(sims, articles):
     results = "\n"+20*"-"+"RESULTS"+20*"-"+"\n\n"
     for x in sims:
@@ -25,6 +44,11 @@ def build_output(sims, articles):
 
     return results
 
+"""
+Writes the application output in a text file
+Input  : parameter object
+         application output
+"""
 def write_output(parameter, results):
     #write results into a txt file
     f=open(parameter.final_result ,"w", encoding='utf-8')
@@ -32,6 +56,11 @@ def write_output(parameter, results):
     f.close()
     print ("Results stored in " + parameter.final_result)
 
+"""
+Main method of text_similarities
+Input  : parameter object
+         articles list
+"""
 def similarity(parameter, articles):
     coherence_value = 0
     num_topics = 0

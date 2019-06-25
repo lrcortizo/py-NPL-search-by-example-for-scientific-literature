@@ -1,7 +1,8 @@
+import sys
 import nltk
 from bs4 import BeautifulSoup
-from article import Article
 from gensim import corpora
+from article import Article
 
 """
 Checks nltk modules
@@ -25,9 +26,9 @@ Output : Article objects list
 def parse_xml(xml_path, pmids):
     article_list = []
     # open and parse xml with BeautifoulSoup
-    infile = open(xml_path,"r")
-    contents = infile.read()
-    soup = BeautifulSoup(contents,'xml')
+    file = open(xml_path,"r")
+    content = file.read()
+    soup = BeautifulSoup(content,'xml')
     try:
         # parse xml file into a list of Article objects
         titles = soup.find_all('ArticleTitle')
@@ -36,7 +37,7 @@ def parse_xml(xml_path, pmids):
         for i in range(0, len(titles)):
             article_list.append(Article(pmids[i], titles[i].text, abstracts[i].text))
     except:
-        print("An error ocurred while parsing xml file. Try it again")
+        print(20*"*"+" An error ocurred while parsing xml file. Try it again")
         sys.exit(1)
     return article_list
 

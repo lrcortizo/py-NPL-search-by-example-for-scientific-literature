@@ -6,6 +6,9 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
+"""
+Class that stores the application configuration
+"""
 class Parameter:
     """
     Constructor of Paramter class

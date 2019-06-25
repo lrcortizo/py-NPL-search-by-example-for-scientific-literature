@@ -3,10 +3,10 @@ import os
 import re
 import getopt
 import logging
+import multiprocessing
 import extract_data
 import natural_language_processing
 import text_similarities
-import multiprocessing
 from parameter import Parameter
 
 """
@@ -74,7 +74,7 @@ def cli_params(argv):
         opts, args = getopt.getopt(argv,"hs:f:d:n:vp:t:m:c",["help","search=","file=","dir=",
             "number=","verbose","processors","topics","max_topics","coherence_model"])
     except getopt.GetoptError:
-        print ('python QueryByExample.py -s <search_term> -f <input_file> ')
+        print ('python QueryByExample.py -s <search_term> -f <input_file>')
         sys.exit(2)
 
     # parse and check cli params
@@ -131,7 +131,7 @@ Options and arguments:\n\
             if int(arg) <= multiprocessing.cpu_count():
                 processors = arg
             else:
-                print ('Too much processors. This computer have '+str(multiprocessing.cpu_count())+' processors')
+                print ('Too much processors. This computer has '+str(multiprocessing.cpu_count())+' processors')
                 sys.exit(1)
 
         # Number of topics
