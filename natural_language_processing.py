@@ -8,14 +8,14 @@ Checks nltk modules
 """
 def nltk_check():
     #check if punkt and stopwords resources are avaliable
-	try:
-		nltk.data.find('tokenizers/punkt')
-		nltk.data.find('corpora/stopwords')
-	except LookupError:
-		print("Downloading punkt...")
-		nltk.download('punkt')
-		print("Downloading stopwords...")
-		nltk.download('stopwords')
+    try:
+        nltk.data.find('tokenizers/punkt')
+        nltk.data.find('corpora/stopwords')
+    except LookupError:
+        print("Downloading punkt...")
+        nltk.download('punkt')
+        print("Downloading stopwords...")
+        nltk.download('stopwords')
 
 """
 Parse xml results file to a list of Article objects
@@ -24,22 +24,27 @@ Output : Article objects list
 """
 def parse_xml(xml_path, pmids):
     article_list = []
-	# open and parse xml with BeautifoulSoup
+    # open and parse xml with BeautifoulSoup
     infile = open(xml_path,"r")
     contents = infile.read()
     soup = BeautifulSoup(contents,'xml')
-	try:
-		# parse xml file into a list of Article objects
-		titles = soup.find_all('ArticleTitle')
-		abstracts = soup.find_all('Abstract')
-		print("* Parsing xml file...")
-		for i in range(0, len(titles)):
-			article_list.append(Article(pmids[i], titles[i].text, abstracts[i].text))
-	except:
-		print("An error ocurred while parsing xml file. Try it again")
-		sys.exit(1)
+    try:
+        # parse xml file into a list of Article objects
+        titles = soup.find_all('ArticleTitle')
+        abstracts = soup.find_all('Abstract')
+        print("* Parsing xml file...")
+        for i in range(0, len(titles)):
+            article_list.append(Article(pmids[i], titles[i].text, abstracts[i].text))
+    except:
+        print("An error ocurred while parsing xml file. Try it again")
+        sys.exit(1)
     return article_list
 
+"""
+Preprocessing of abstract texts before create corpus
+Input  : Article list
+Output : tokenized Article objects list
+"""
 def preprocessing(article_list):
     doc_arrays = []
     for article in article_list:
@@ -47,6 +52,11 @@ def preprocessing(article_list):
 
     return doc_arrays
 
+"""
+Main method of natural_language_processing
+Input  : parameter object, pmids list
+Output : Article object list
+"""
 def process_docs(parameter, pmids):
     #Check if necessary resources are avaliable
     nltk_check()
