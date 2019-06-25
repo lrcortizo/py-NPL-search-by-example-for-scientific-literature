@@ -187,15 +187,15 @@ if __name__ == "__main__":
 
     # Step 1: Web scraping
     print_step("Step 1: Scraping pubmed database")
-    pmids = extract_data.extract(parameter)
+    pmids, results = extract_data.extract(parameter)
     print_step("End step 1")
 
     # Step 2: Text processing
     print_step("Step 2: Natural language processing")
-    articles = natural_language_processing.process_docs(parameter, pmids)
+    articles, tokenized_list, dicctionary, corpus = natural_language_processing.process_docs(parameter, pmids, results)
     print_step("End step 2")
 
     # Step 3: Text similarities
     print_step("Step 3: Text similarities")
-    text_similarities.similarity(parameter, articles)
+    text_similarities.similarity(parameter, articles, tokenized_list, dicctionary, corpus)
     print_step("End step 3")

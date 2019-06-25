@@ -19,16 +19,14 @@ def nltk_check():
         nltk.download('stopwords')
 
 """
-Parse xml results file to a list of Article objects
+Parse xml results to a list of Article objects
 Input  : path to xml, result PubMed IDs
 Output : Article objects list
 """
-def parse_xml(xml_path, pmids):
+def parse_xml(pmids, results):
     article_list = []
-    # open and parse xml with BeautifoulSoup
-    file = open(xml_path,"r")
-    content = file.read()
-    soup = BeautifulSoup(content,'xml')
+    # parse xml with BeautifoulSoup
+    soup = BeautifulSoup(results,'xml')
     try:
         # parse xml file into a list of Article objects
         titles = soup.find_all('ArticleTitle')
@@ -58,6 +56,8 @@ def preprocessing(article_list):
 Creates dictionary and BOW corpus representation
 Input  : parameter
          tokenized docs
+Output : dicctionary
+         corpus
 """
 def prepare_corpus(parameter, tokenized_list):
     # Creates dictionary
@@ -65,26 +65,32 @@ def prepare_corpus(parameter, tokenized_list):
     dictionary = corpora.Dictionary(tokenized_list)
     dictionary.save(parameter.dictionary)
     print ("**** Dictionary stored in " + parameter.dictionary)
+
     # Creating Bag of Words model
     print("***** Building BOW corpus...")
     corpus = [dictionary.doc2bow(array) for array in tokenized_list]
     corpora.MmCorpus.serialize(parameter.corpus, corpus)
     print ("****** Corpus stored in " + parameter.corpus)
 
+    return dictionary, corpus
+
 """
 Main method of natural_language_processing
 Input  : parameter object, pmids list
 Output : Article object list
+         Tokenized text
+         Dictionary
+         Corpus
 """
-def process_docs(parameter, pmids):
+def process_docs(parameter, pmids, results):
     # Check if necessary resources are avaliable
     nltk_check()
 
     # Parse xml file
-    article_list = parse_xml(parameter.data_extraction_result, pmids)
+    article_list = parse_xml(pmids, results)
     tokenized_list = preprocessing(article_list)
 
     # Creates dictionary and corpus
-    prepare_corpus(parameter, tokenized_list)
+    dictionary, corpus = prepare_corpus(parameter, tokenized_list)
 
-    return article_list
+    return article_list, tokenized_list, dictionary, corpus

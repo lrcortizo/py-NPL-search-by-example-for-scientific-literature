@@ -78,4 +78,4 @@ def extract(parameter):
     fetchResults = fetch_details(pubmedIDs)
     write_xml(fetchResults, parameter)
 
-    return pubmedIDs
+    return pubmedIDs, fetchResults

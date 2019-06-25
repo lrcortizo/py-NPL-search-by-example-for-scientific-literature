@@ -15,14 +15,15 @@ Output : best scored model
          best coherence value
          best number of topics
 """
-def get_coherence_value(dictionary, doc_term_matrix, doc_clean, start, stop, step):
+def get_coherence_value(dictionary, doc_term_matrix, tokenized_list, start, stop, step, processors):
     coherence_value = 0
     best_model = None
     best_num_topics = 0
     for num_topics in range(start, stop, step):
         # generate LSA model
         model = models.LsiModel(doc_term_matrix, num_topics=num_topics, id2word = dictionary)  # train model
-        coherencemodel = models.CoherenceModel(model=model, texts=doc_clean, dictionary=dictionary, coherence='c_v', processes=2)
+        coherencemodel = models.CoherenceModel(model=model, texts=tokenized_list, dictionary=dictionary,
+                                coherence='c_v', processes=processors)
         if(coherence_value < coherencemodel.get_coherence()):
             coherence_value = coherencemodel.get_coherence()
             best_model = model
@@ -60,38 +61,38 @@ def write_output(parameter, results):
 Main method of text_similarities
 Input  : parameter object
          articles list
+         tokenized texts
+         dictionary
+         corpus
 """
-def similarity(parameter, articles):
-    coherence_value = 0
-    num_topics = 0
-    #load dictionary and corpus
-    doc_arrays = natural_language_processing.preprocessing(articles)
-    dictionary = corpora.Dictionary.load(parameter.dictionary)
-    corpus_list = corpora.MmCorpus(parameter.corpus)
-    doc_term_matrix = list(corpus_list)
+def similarity(parameter, articles, tokenized_list, dictionary, corpus):
+    # Creating tfidf model
+    tfidf = models.TfidfModel(corpus)
+    doc_term_matrix = tfidf[corpus]
 
-    #Creating tfidf model
-    tfidf = models.TfidfModel(doc_term_matrix)
-    corpus_tfidf = tfidf[doc_term_matrix]
-    #Double wrapping with lsi
+    if parameter.coherence_model:
+        # Get best LSI model
+        lsi_model, coherence_value, num_topics = get_coherence_value(dictionary, doc_term_matrix, tokenized_list,
+                                                    2, parameter.max_topics, 1, parameter.processors)
+    else:
+        lsi_model = models.LsiModel(doc_term_matrix, num_topics=parameter.topics, id2word = dictionary)
 
-    #lsi_model, coherence_value, num_topics = get_coherence_value(dictionary, corpus_tfidf, doc_arrays, 10, 50, 1)
-    lsi_model = models.LsiModel(corpus_tfidf, num_topics=50, id2word = dictionary)
-    corpus_lsi = lsi_model[corpus_tfidf]
+    # Double wrapping with lsi
+    corpus_lsi = lsi_model[doc_term_matrix]
 
-    #Reference file to compare
+    # Reference file to compare
     vec_bow = dictionary.doc2bow(parameter.get_input_file_array())
     vec_tfidf = tfidf[vec_bow]
     vec_lsi = lsi_model[vec_tfidf]
 
-    #Similarites
+    # Similarites
     index = similarities.MatrixSimilarity(corpus_lsi)
     index.save(parameter.index)
-    index = similarities.MatrixSimilarity.load(parameter.index)
     sims = sorted(enumerate(index[vec_lsi]), key=lambda item: -item[1])
-    #Print sorted articles
+
+    # Print sorted articles
     results = build_output(sims, articles)
-    if coherence_value > 0:
+    if parameter.coherence_model:
         print("\nCoherence value: "+str(coherence_value)+", Number of topics: "+str(num_topics))
     print(results)
     write_output(parameter, results)
