@@ -59,11 +59,15 @@ class Parameter:
         try:
             #Create output directory if not exists
             if not os.path.exists(dir):
-                    all_dirs = dir + "tmp/"
-                    os.mkdirs(all_dirs)
+                all_dirs = dir + "tmp/"
+                os.mkdirs(all_dirs)
             else:
-                if not os.path.exists(dir+"tmp/"):
-                    os.mkdir(dir+"tmp/")
+                if os.access(dir, os.W_OK):
+                    if not os.path.exists(dir+"tmp/"):
+                        os.mkdir(dir+"tmp/")
+                else:
+                    print("The output directory does not have wrtie permissions")
+                    sys.exit(1)
         except:
             print("Cannot create output directory, check write permissions")
             sys.exit(1)
@@ -89,6 +93,5 @@ class Parameter:
             for word in stemmed_tokens:
                 frequency[word] += 1
             self.input_file_text = [word for word in stemmed_tokens if frequency[word] > 1]
-
 
         return self.input_file_text

@@ -100,14 +100,14 @@ Options and arguments:\n\
                 search_term = arg
             else:
                 print ('You must introduce a valid search term. At least 3 characters.')
-                sys.exit()
+                sys.exit(1)
 
         # Example file
         elif opt in ("-f", "--file"):
             if valid_file(arg):
                 file = arg
             else:
-                sys.exit()
+                sys.exit(1)
 
         # Output directory
         elif opt in ("-d", "--dir"):
@@ -115,7 +115,7 @@ Options and arguments:\n\
                 output_directory = arg
             else:
                 print ('You must introduce a valid directory name.')
-                sys.exit()
+                sys.exit(1)
 
         # Results number
         elif opt in ("-n", "--number"):
@@ -123,7 +123,7 @@ Options and arguments:\n\
                 max_results = arg
             else:
                 print ('You must introduce a valid result number.')
-                sys.exit()
+                sys.exit(1)
 
         # Number of CPU processors
         elif opt in ("-p", "--procesors"):
@@ -131,7 +131,7 @@ Options and arguments:\n\
                 processors = arg
             else:
                 print ('Too much processors. This computer have '+str(multiprocessing.cpu_count())+' processors')
-                sys.exit()
+                sys.exit(1)
 
         # Number of topics
         elif opt in ("-t", "--topics"):
@@ -139,7 +139,7 @@ Options and arguments:\n\
                 topics = arg
             else:
                 print ('You must introduce a valid topics number.')
-                sys.exit()
+                sys.exit(1)
 
         # Max topics
         elif opt in ("-m", "--max_topics"):
@@ -147,7 +147,7 @@ Options and arguments:\n\
                 topics = arg
             else:
                 print ('You must introduce a valid maximum topics number.')
-                sys.exit()
+                sys.exit(1)
 
         # Coherence model mode
         elif opt in ("-c", "--coherence_model"):
@@ -156,10 +156,10 @@ Options and arguments:\n\
     # check required params
     if not search_term:
         print ('You must introduce a search term.')
-        sys.exit()
+        sys.exit(1)
     elif not file:
         print ('You must introduce a input file.')
-        sys.exit()
+        sys.exit(1)
 
     # object with the params configuration
     parameter = Parameter(search_term, file, output_directory, max_results, verbose,

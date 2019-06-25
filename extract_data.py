@@ -53,7 +53,7 @@ def write_xml(data, parameter):
     if data==None:
         print (80*"*"+"\n")
         print ("This search returned no hits")
-        sys.exit()
+        sys.exit(1)
 
     else:
         try:
