@@ -91,7 +91,8 @@ Options and arguments:\n\
   -p, --procesors: Number of CPU processors\n\
   -t, --topics: Number of topics\n\
   -m, --max_topics: Maximum number of topics\n\
-  -c, --coherence_model: Coherence Model mode')
+  -c, --coherence_model: Coherence Model mode\n\
+  -h, --help: Shows the different options and arguments')
             sys.exit()
 
         # Search term

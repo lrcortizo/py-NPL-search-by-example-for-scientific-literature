@@ -2,13 +2,18 @@
 ##### Query-by-example tool for scientific literature searches using web scraping, natural language processing and machine learning
 ###### Usage:
 ```
-python QueryByExample.py -s <search_term>  -f <input_file> -d <output_directory> -n <results_number> -v
+python QueryByExample.py -s <search_term>  -f <input_file>
 Options and arguments:
   -s, --search: Search term to query pubmed
   -f, --input_file: Input file to compare the results of query
   -d, --dir: Output directory to the output and temporary files (Optional, current directory by default)
   -n, --results_number: Number of results in pubmed search (Optional, 10 results by default)
   -v, --verbose: Verbose mode (Optional, no verbose mode by default)
+  -p, --processors: Number of CPU processors (Optional, 1 processor by default)
+  -t, --topics: Number of topics (Optional, 20 topics by default)
+  -m, --max_topics: Maximum number of topics (Optional, 200 by default)
+  -c, --coherence_model: Coherence Model mode (Optional, no coherence model mode by default)
+  -h, --help: Shows the different options and arguments
 ```
 ###### Requirements:
 - Python >= 3.7.2
