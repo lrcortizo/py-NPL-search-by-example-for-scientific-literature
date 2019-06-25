@@ -7,6 +7,18 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 
 class Parameter:
+    """
+    Constructor of Paramter class
+    Input  :  search term
+              example file
+              output directory
+              results number
+              verbose mode
+              processors number
+              number of topics
+              maximum topics number
+              choerence model mode
+    """
     def __init__(self, search_term, file, output_directory, max_results,
         verbose, processors, topics, max_topics, coherence_model):
         self.search_term = search_term
@@ -25,6 +37,11 @@ class Parameter:
         self.max_topics = max_topics
         self.coherence_model = coherence_model
 
+    """
+    Checks format of output directory name
+    Input  : script params
+    Output : parameter object
+    """
     def check_directory_format(self, dir):
         #Check format of directory path
         pattern = re.compile(".+\/$")
@@ -32,10 +49,15 @@ class Parameter:
             dir  =  dir + "/"
         return dir
 
+    """
+    Checks and creates output directory if it not exists
+    Input  : script params
+    Output : parameter object
+    """
     def create_output_directory(self, output_directory):
-        #Create output directory if not exists
         dir = self.check_directory_format(output_directory)
         try:
+            #Create output directory if not exists
             if not os.path.exists(dir):
                     all_dirs = dir + "tmp/"
                     os.mkdirs(all_dirs)
