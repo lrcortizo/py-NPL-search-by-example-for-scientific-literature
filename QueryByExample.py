@@ -37,9 +37,9 @@ Output : boolean check
 """
 def valid_directory(dir):
     pattern = re.compile("^[\w\_.@()-]+/?$")
-    if pattern.match(dir) is None:
-        return False
-    return True
+    if pattern.match(dir) is not None:
+        return True
+    return False
 
 """
 Validate given results number/topics number

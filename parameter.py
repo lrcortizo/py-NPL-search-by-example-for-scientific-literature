@@ -11,14 +11,13 @@ class Parameter:
         verbose, processors, topics, max_topics, coherence_model):
         self.search_term = search_term
         self.file = file
-        self.output_directory = self.check_directory_format(output_directory)
-        self.create_output_directory()
+        self.output_directory = self.create_output_directory(output_directory)
         self.max_results = max_results
         self.data_extraction_result = self.output_directory + "data_extraction_result.xml"
         self.final_result = self.output_directory + "similarities_result.txt"
-        self.dictionary = self.output_directory + "dictionary.dict"
-        self.corpus = self.output_directory + "corpus.mm"
-        self.index = self.output_directory + "similarity.index"
+        self.dictionary = self.output_directory + "tmp/dictionary.dict"
+        self.corpus = self.output_directory + "tmp/corpus.mm"
+        self.index = self.output_directory + "tmp/similarity.index"
         self.input_file_text = None
         self.verbose = verbose
         self.processors = processors
@@ -33,10 +32,20 @@ class Parameter:
             dir  =  dir + "/"
         return dir
 
-    def create_output_directory(self):
+    def create_output_directory(self, output_directory):
         #Create output directory if not exists
-        if not os.path.exists(self.output_directory):
-            os.mkdir(self.output_directory)
+        dir = self.check_directory_format(output_directory)
+        try:
+            if not os.path.exists(dir):
+                    all_dirs = dir + "tmp/"
+                    os.mkdirs(all_dirs)
+            else:
+                if not os.path.exists(dir+"tmp/"):
+                    os.mkdir(dir+"tmp/")
+        except:
+            print("Cannot create output directory, check write permissions")
+            sys.exit(1)
+        return dir
 
     def get_input_file_array(self):
         if self.input_file_text is None:
