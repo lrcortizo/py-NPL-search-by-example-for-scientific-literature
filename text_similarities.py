@@ -55,10 +55,14 @@ Input  : parameter object
 """
 def write_output(parameter, results):
     #write results into a txt file
-    f=open(parameter.final_result ,"w", encoding='utf-8')
-    f.write(results)
-    f.close()
-    print ("Results stored in " + parameter.final_result)
+    try:
+        f=open(parameter.final_result ,"w", encoding='utf-8')
+        f.write(results)
+        f.close()
+        print ("Results stored in " + parameter.final_result)
+    except:
+        print('\033[91m'+20*"*"+" The final result file could not be saved"+'\033[0m')
+        sys.exit(1)
 
 """
 Main method of text_similarities
