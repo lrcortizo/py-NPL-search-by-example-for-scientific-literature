@@ -1,5 +1,5 @@
 ## Query-by-example-for-systematic-scientific-literature-searches
-##### Query-by-example tool for scientific literature searches using web scraping, natural language processing and machine learning
+##### Query-by-example tool for scientific literature searches using PubMed E-Utilities, natural language processing and machine learning
 ###### Usage:
 ```
 python QueryByExample.py -s <search_term>  -f <input_file>
