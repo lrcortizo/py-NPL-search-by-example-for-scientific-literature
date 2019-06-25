@@ -42,13 +42,13 @@ def valid_directory(dir):
     return True
 
 """
-Validate given results number
-Input  : results number
+Validate given results number/topics number
+Input  : results number/topics number
 Output : boolean check
 """
 def valid_number(num):
     pattern = re.compile(r'\d+')
-    if not pattern.match(num) is None and int(num) > 0:
+    if not pattern.match(num) is None and int(num) > 1:
         return True
     return False
 
@@ -135,11 +135,19 @@ Options and arguments:\n\
 
         # Number of topics
         elif opt in ("-t", "--topics"):
-            topics = arg
+            if valid_number(arg):
+                topics = arg
+            else:
+                print ('You must introduce a valid topics number.')
+                sys.exit()
 
         # Max topics
         elif opt in ("-m", "--max_topics"):
-            max_topics = arg
+            if valid_number(arg):
+                topics = arg
+            else:
+                print ('You must introduce a valid maximum topics number.')
+                sys.exit()
 
         # Coherence model mode
         elif opt in ("-c", "--coherence_model"):
