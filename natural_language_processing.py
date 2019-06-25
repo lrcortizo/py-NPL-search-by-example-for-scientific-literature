@@ -40,7 +40,7 @@ def parse_xml(pmids, results):
         for i in range(0, len(titles)):
             article_list.append(Article(pmids[i], titles[i].text, abstracts[i].text))
     except:
-        print(20*"*"+" An error ocurred while parsing xml file. Try it again")
+        print('\033[91m'+20*"*"+" An error ocurred while parsing xml file. Try it again"+'\033[0m')
         sys.exit(1)
     return article_list
 

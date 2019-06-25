@@ -101,5 +101,5 @@ def similarity(parameter, articles, dictionary, corpus):
     results = build_output(sims, articles)
     if parameter.coherence_model:
         print("*** Coherence value: "+str(coherence_value)+"\n**** Number of topics: "+str(num_topics))
-    print(results)
     write_output(parameter, results)
+    print(results)

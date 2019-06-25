@@ -19,11 +19,11 @@ def search(parameter):
         searchResults = Entrez.read(searchHandle)
         searchHandle.close()
     except:
-        print (20*"*"+" Error occurred while searching PubMed")
+        print ('\033[91m'+20*"*"+" Error occurred while searching PubMed"+'\033[0m')
         sys.exit(1)
 
     if len(searchResults['IdList']) == 0:
-        print (20*"*"+" This search returned no hits\n")
+        print ('\033[91m'+20*"*"+" This search returned no hits\n"+'\033[0m')
         sys.exit(1)
 
     print ("** "+str(len(searchResults['IdList'])) + " articles founded for '"+parameter.search_term+"'")
@@ -46,7 +46,7 @@ def fetch_details(pubmedIDs):
         fetchResults = fetchHandle.read()
         fetchHandle.close()
     except:
-        print (20*"*"+" Error occurred while retrieving data")
+        print ('\033[91m'+20*"*"+" Error occurred while retrieving data"+'\033[0m')
         sys.exit(1)
     return fetchResults
 
@@ -65,7 +65,7 @@ def write_xml(data, parameter):
         f.close()
         print ("***** Search results stored in " + parameter.data_extraction_result)
     except:
-        print(20*"*"+" The xml file could not be saved")
+        print('\033[91m'+20*"*"+" The xml file could not be saved"+'\033[0m')
         sys.exit(1)
 
 """

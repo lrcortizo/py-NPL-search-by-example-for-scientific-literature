@@ -126,6 +126,10 @@ Options and arguments:\n\
                 print ('You must introduce a valid result number.')
                 sys.exit(1)
 
+        # Verbose mode
+        elif opt in ("-v", "--verbose"):
+            verbose = True
+
         # Number of CPU processors
         elif opt in ("-p", "--procesors"):
             if int(arg) <= multiprocessing.cpu_count():
