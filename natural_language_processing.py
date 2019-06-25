@@ -46,11 +46,24 @@ Input  : Article list
 Output : tokenized Article objects list
 """
 def preprocessing(article_list):
-    doc_arrays = []
+    tokenized_list = []
     for article in article_list:
-        doc_arrays.append(article.get_abstract_array())
+        tokenized_list.append(article.get_abstract_array())
 
-    return doc_arrays
+    return tokenized_list
+
+"""
+Creates dicctionary and BOW corpus representation
+Input  : parameter
+         tokenized docs
+"""
+def prepare_corpus(parameter, tokenized_list):
+    # Creating dictionary
+    dictionary = corpora.Dictionary(tokenized_list)
+    dictionary.save(parameter.dictionary)
+    # Creating Bag of Words model
+    corpus = [dictionary.doc2bow(array) for array in tokenized_list]
+    corpora.MmCorpus.serialize(parameter.corpus, corpus)
 
 """
 Main method of natural_language_processing
@@ -58,18 +71,14 @@ Input  : parameter object, pmids list
 Output : Article object list
 """
 def process_docs(parameter, pmids):
-    #Check if necessary resources are avaliable
+    # Check if necessary resources are avaliable
     nltk_check()
 
-    #Parse xml file
+    # Parse xml file
     article_list = parse_xml(parameter.data_extraction_result, pmids)
-    doc_arrays = preprocessing(article_list)
+    tokenized_list = preprocessing(article_list)
 
-    #Creating dictionary and corpus
-    dictionary = corpora.Dictionary(doc_arrays)
-    dictionary.save(parameter.dictionary)
-
-    corpus = [dictionary.doc2bow(array) for array in doc_arrays]
-    corpora.MmCorpus.serialize(parameter.corpus, corpus)
+    # Creating dictionary and corpus
+    prepare_corpus(parameter, tokenized_list)
 
     return article_list
