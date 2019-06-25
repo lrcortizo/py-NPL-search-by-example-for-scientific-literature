@@ -43,7 +43,7 @@ class Parameter:
     Output : parameter object
     """
     def check_directory_format(self, dir):
-        #Check format of directory path
+        # Check format of directory path
         pattern = re.compile(".+\/$")
         if pattern.match(dir) is None:
             dir  =  dir + "/"
@@ -57,7 +57,7 @@ class Parameter:
     def create_output_directory(self, output_directory):
         dir = self.check_directory_format(output_directory)
         try:
-            #Create output directory if not exists
+            # Create output directory if not exists
             if not os.path.exists(dir):
                 all_dirs = dir + "tmp/"
                 os.mkdirs(all_dirs)
@@ -75,12 +75,12 @@ class Parameter:
 
     def get_input_file_array(self):
         if self.input_file_text is None:
-            #parse file
+            # parse file
             file = open(self.file, mode='r')
             text = file.read()
             file.close()
             stemmer = PorterStemmer()
-            #tokenize, remove stopwords and punctuation
+            # tokenize, remove stopwords and punctuation
             tokens = word_tokenize(text)
             tokens = [w.lower() for w in tokens]
             table = str.maketrans('', '', string.punctuation)

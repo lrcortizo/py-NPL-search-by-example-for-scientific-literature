@@ -3,28 +3,41 @@ from bs4 import BeautifulSoup
 from article import Article
 from gensim import corpora
 
+"""
+Checks nltk modules
+"""
 def nltk_check():
     #check if punkt and stopwords resources are avaliable
 	try:
 		nltk.data.find('tokenizers/punkt')
 		nltk.data.find('corpora/stopwords')
 	except LookupError:
+		print("Downloading punkt...")
 		nltk.download('punkt')
+		print("Downloading stopwords...")
 		nltk.download('stopwords')
 
+"""
+Parse xml results file to a list of Article objects
+Input  : path to xml, result PubMed IDs
+Output : Article objects list
+"""
 def parse_xml(xml_path, pmids):
-    #parse xml file into a list of Article objects
     article_list = []
-
+	# open and parse xml with BeautifoulSoup
     infile = open(xml_path,"r")
     contents = infile.read()
     soup = BeautifulSoup(contents,'xml')
-
-    titles = soup.find_all('ArticleTitle')
-    abstracts = soup.find_all('Abstract')
-
-    for i in range(0, len(titles)):
-        article_list.append(Article(pmids[i], titles[i].text, abstracts[i].text))
+	try:
+		# parse xml file into a list of Article objects
+		titles = soup.find_all('ArticleTitle')
+		abstracts = soup.find_all('Abstract')
+		print("* Parsing xml file...")
+		for i in range(0, len(titles)):
+			article_list.append(Article(pmids[i], titles[i].text, abstracts[i].text))
+	except:
+		print("An error ocurred while parsing xml file. Try it again")
+		sys.exit(1)
     return article_list
 
 def preprocessing(article_list):
