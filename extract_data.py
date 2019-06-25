@@ -19,6 +19,7 @@ def search(parameter):
         searchResults = Entrez.read(searchHandle)
         searchHandle.close()
         print ("** "+str(len(searchResults['IdList'])) + " articles founded for '"+parameter.search_term+"'")
+        print(searchResults['IdList'])
         return searchResults['IdList']
     except:
         return None

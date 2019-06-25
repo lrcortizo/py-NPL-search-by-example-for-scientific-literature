@@ -12,7 +12,7 @@ def nltk_check():
 		nltk.download('punkt')
 		nltk.download('stopwords')
 
-def parse_xml(xml_path):
+def parse_xml(xml_path, pmids):
     #parse xml file into a list of Article objects
     article_list = []
 
@@ -20,12 +20,11 @@ def parse_xml(xml_path):
     contents = infile.read()
     soup = BeautifulSoup(contents,'xml')
 
-    pmids = soup.find_all('PMID')
     titles = soup.find_all('ArticleTitle')
     abstracts = soup.find_all('Abstract')
 
     for i in range(0, len(titles)):
-        article_list.append(Article(pmids[i].text, titles[i].text, abstracts[i].text))
+        article_list.append(Article(pmids[i], titles[i].text, abstracts[i].text))
     return article_list
 
 def preprocessing(article_list):
@@ -35,12 +34,12 @@ def preprocessing(article_list):
 
     return doc_arrays
 
-def process_docs(parameter):
+def process_docs(parameter, pmids):
     #Check if necessary resources are avaliable
     nltk_check()
 
     #Parse xml file
-    article_list = parse_xml(parameter.data_extraction_result)
+    article_list = parse_xml(parameter.data_extraction_result, pmids)
     doc_arrays = preprocessing(article_list)
 
     #Creating dictionary and corpus
